@@ -18,10 +18,22 @@ type I4r = Index
 type I5r = Index
 type I6r = Index
 type Jr = Jump
+type Registers =
+  ( Ar
+  , Xr
+  , I1r
+  , I2r
+  , I3r
+  , I4r
+  , I6r
+  , Jr
+  )
 
 type Memory = [Word']
 type OverflowToggle = Bool
 data ComparisonIndicator = E | L | G
+
+data MixComputer = MixComputer Registers Memory OverflowToggle ComparisonIndicator
 
 memSize :: Int
 memSize = 4000
