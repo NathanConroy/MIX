@@ -19,6 +19,9 @@ type I5r = Index
 type I6r = Index
 type Jr = Jump
 
+type OverflowToggle = Bool
+data ComparisonIndicator = E | L | G
+
 memSize :: Int
 memSize = 4000
 
@@ -27,3 +30,5 @@ initMemoryCell = (Pos, 0, 0, 0, 0, 0)
 
 initialMemory :: [Word']
 initialMemory = replicate memSize initMemoryCell
+
+-- TODO input-output devices (Magnetic Tapes, Drums, etc.)
