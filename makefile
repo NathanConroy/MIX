@@ -4,6 +4,9 @@ FORCE:
 build:
 	stack build
 
-prod: build
+tests:
+	stack test
+
+prod: build tests
 	git commit -a
 	git push

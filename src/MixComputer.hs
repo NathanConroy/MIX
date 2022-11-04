@@ -1,7 +1,9 @@
 module MixComputer where
 
+import Control.Monad.State.Lazy as S
+
 type Byte = Int
-data Sign = Pos | Neg
+data Sign = Pos | Neg deriving (Eq, Show)
 
 type Word' = (Sign, Byte, Byte, Byte, Byte, Byte)
 type Index = (Sign, Byte, Byte)
@@ -18,30 +20,82 @@ type I4r = Index
 type I5r = Index
 type I6r = Index
 type Jr = Jump
-type Registers =
-  ( Ar
-  , Xr
-  , I1r
-  , I2r
-  , I3r
-  , I4r
-  , I6r
-  , Jr
-  )
+data Registers = Registers
+  { rA :: Ar
+  , rX :: Xr
+  , rI1 :: I1r
+  , rI2 :: I2r
+  , rI3 :: I3r
+  , rI4 :: I4r
+  , rI5 :: I5r
+  , rI6 :: I6r
+  , rJ :: Jr
+  }
 
-type Memory = [Word']
+type MemCell = Word'
+type Memory = [MemCell]
 type OverflowToggle = Bool
 data ComparisonIndicator = E | L | G
 
-data MixComputer = MixComputer Registers Memory OverflowToggle ComparisonIndicator
+data MixComputer = MixComputer
+  { registers :: Registers
+  , memory :: Memory
+  , overflowToggle :: OverflowToggle
+  , compIndicator :: ComparisonIndicator
+  }
 
+-- TODO - Check if Knuth defines intial values for these things
 memSize :: Int
 memSize = 4000
 
-initMemoryCell :: Word'
+initA :: Ar
+initA = (Pos, 0, 0, 0, 0, 0)
+
+initX :: Xr
+initX = (Pos, 0, 0, 0, 0, 0)
+
+initIndexReg :: Index
+initIndexReg = (Pos, 0, 0)
+
+initJumpReg :: Jump
+initJumpReg = (0, 0)
+
+initRegisters :: Registers
+initRegisters = Registers
+  { rA = initA
+  , rX = initX
+  , rI1 = initIndexReg
+  , rI2 = initIndexReg
+  , rI3 = initIndexReg
+  , rI4 = initIndexReg
+  , rI5 = initIndexReg
+  , rI6 = initIndexReg
+  , rJ = initJumpReg
+  }
+
+initMemoryCell :: MemCell
 initMemoryCell = (Pos, 0, 0, 0, 0, 0)
 
-initialMemory :: Memory
-initialMemory = replicate memSize initMemoryCell
+initMemory :: Memory
+initMemory = replicate memSize initMemoryCell
+
+initOverflow :: Bool
+initOverflow = False
+
+initCompIndicator :: ComparisonIndicator
+initCompIndicator = E
+
+initComputer :: MixComputer
+initComputer = MixComputer
+  { registers = initRegisters
+  , memory = initMemory
+  , overflowToggle = initOverflow
+  , compIndicator = initCompIndicator
+  }
 
 -- TODO input-output devices (Magnetic Tapes, Drums, etc.)
+
+contents :: Int -> S.State MixComputer MemCell
+contents idx = do
+  computer <- S.get
+  return $ (memory computer) !! idx
