@@ -36,6 +36,7 @@ data Registers = Registers
   , rJ :: Jr
   }
 
+type MemLoc = Int
 type MemCell = Word'
 type Memory = [MemCell]
 
@@ -108,7 +109,7 @@ initComputer = MixComputer
 -- MIX Operations --
 --------------------
 
-contents :: Int -> S.State MixComputer MemCell
-contents idx = do
+contents :: MemLoc -> S.State MixComputer MemCell
+contents loc = do
   computer <- S.get
-  return $ (memory computer) !! idx
+  return $ (memory computer) !! loc
