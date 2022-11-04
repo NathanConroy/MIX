@@ -1,3 +1,5 @@
+{-# Language NegativeLiterals #-}
+
 module MixComputer where
 
 import Control.Monad.State.Lazy as S
@@ -7,7 +9,10 @@ import Control.Monad.State.Lazy as S
 ----------------------------------
 
 type Byte = Int
-data Sign = Pos | Neg deriving (Eq, Show)
+byteSize = 64 -- TODO: the byte size should be configurable
+
+data Sign = Pos | Neg
+  deriving (Eq, Show)
 
 type Word' = (Sign, Byte, Byte, Byte, Byte, Byte)
 type Index = (Sign, Byte, Byte)
@@ -108,6 +113,11 @@ initComputer = MixComputer
 --------------------
 -- MIX Operations --
 --------------------
+
+-- TODO: Factor in index specification
+address :: Word' -> MemLoc
+address (sign, a1, a2, _, _, _) = s * (a1 * byteSize + a2)
+  where s = if sign == Pos then 1 else -1
 
 contents :: MemLoc -> S.State MixComputer MemCell
 contents loc = do
