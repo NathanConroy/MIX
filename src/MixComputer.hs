@@ -2,6 +2,10 @@ module MixComputer where
 
 import Control.Monad.State.Lazy as S
 
+----------------------------------
+-- MIX TYPES & MISC DEFINITIONS --
+----------------------------------
+
 type Byte = Int
 data Sign = Pos | Neg deriving (Eq, Show)
 
@@ -34,6 +38,10 @@ data Registers = Registers
 
 type MemCell = Word'
 type Memory = [MemCell]
+
+memSize :: Int
+memSize = 4000
+
 type OverflowToggle = Bool
 data ComparisonIndicator = E | L | G
 
@@ -44,10 +52,13 @@ data MixComputer = MixComputer
   , compIndicator :: ComparisonIndicator
   }
 
--- TODO - Check if Knuth defines intial values for these things
-memSize :: Int
-memSize = 4000
+-- TODO input-output devices (Magnetic Tapes, Drums, etc.)
 
+-- TODO - Check if Knuth defines intial values for these things
+
+--------------------
+-- MIX INIT STATE --
+--------------------
 initA :: Ar
 initA = (Pos, 0, 0, 0, 0, 0)
 
@@ -93,7 +104,9 @@ initComputer = MixComputer
   , compIndicator = initCompIndicator
   }
 
--- TODO input-output devices (Magnetic Tapes, Drums, etc.)
+--------------------
+-- MIX Operations --
+--------------------
 
 contents :: Int -> S.State MixComputer MemCell
 contents idx = do
