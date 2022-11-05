@@ -114,6 +114,18 @@ initComputer = MixComputer
 -- MIX Operations --
 --------------------
 
+idxReg :: Byte -> S.State MixComputer Index
+idxReg i = do
+  comp <- S.get
+  let regs = registers comp
+  case i of
+    1 -> return $ rI1 regs
+    2 -> return $ rI2 regs
+    3 -> return $ rI3 regs
+    4 -> return $ rI4 regs
+    5 -> return $ rI5 regs
+    6 -> return $ rI6 regs
+
 -- TODO: Factor in index specification
 address :: Word' -> MemLoc
 address (sign, a1, a2, _, _, _) = s * (a1 * byteSize + a2)
