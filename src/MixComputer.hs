@@ -11,17 +11,19 @@ import Control.Monad.State.Lazy as S
 ----------------------------------
 
 type Byte = Int
+
+byteSize :: Int
 byteSize = 64 -- TODO: the byte size should be configurable
 
 data Sign = Pos | Neg
   deriving (Eq, Show)
 
 -- The parts of a word are numbered thusly:
---------------------------------------------
+---------------------------------------------
 -- |   0  |   1  |   2  |   3  |   4  |   5  |
---------------------------------------------
+---------------------------------------------
 -- |  +-  | Byte | Byte | Byte | Byte | Byte |
---------------------------------------------
+---------------------------------------------
 type Word' = (Sign, Byte, Byte, Byte, Byte, Byte)
 type Index = (Sign, Byte, Byte)
 type Jump = (Byte, Byte)
@@ -130,6 +132,7 @@ initComputer = MixComputer
 -- Auxiliary Funcs --
 ---------------------
 
+fieldSpecLeftWeight :: Int
 fieldSpecLeftWeight = 8
 
 decodeFieldSpec :: Byte -> FieldSpec
