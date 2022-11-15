@@ -1,4 +1,4 @@
-{-# Language NegativeLiterals #-}
+{-# Language NegativeLiterals  #-}
 {-# Language NoImplicitPrelude #-}
 
 module MixComputer where
@@ -16,9 +16,22 @@ byteSize = 64 -- TODO: the byte size should be configurable
 data Sign = Pos | Neg
   deriving (Eq, Show)
 
+-- The parts of a word are numbered thusly:
+--------------------------------------------
+-- |   0  |   1  |   2  |   3  |   4  |   5  |
+--------------------------------------------
+-- |  +-  | Byte | Byte | Byte | Byte | Byte |
+--------------------------------------------
 type Word' = (Sign, Byte, Byte, Byte, Byte, Byte)
 type Index = (Sign, Byte, Byte)
 type Jump = (Byte, Byte)
+
+-- A field specification denotes the bytes of a Word'
+-- an instruction should concern itself with.
+-- It is denoted in the book as (L:R) and is typically encoded
+-- in the 4th byte of a Word' as the sum 8L + R.
+-- L and R are respectively the left and right bounds of the Word'
+-- inclusive. So (3:5) denotes the 3rd, 4th, and 5th bytes.
 type FieldSpec = (Int, Int)
 
 -- Knuth refers to these with the little 'r' in front: (rA, rX, etc ...)
@@ -117,14 +130,12 @@ initComputer = MixComputer
 -- Auxiliary Funcs --
 ---------------------
 
--- A field spec (L:R) is encoded in a Word' as 8L + R
 fieldSpecLeftWeight = 8
 
 decodeFieldSpec :: Byte -> FieldSpec
 decodeFieldSpec byte = (left, right)
   where left = byte `div` fieldSpecLeftWeight
         right = byte `mod` fieldSpecLeftWeight
-        
 
 encodeFieldSpec :: FieldSpec -> Byte
 encodeFieldSpec (left, right) = fieldSpecLeftWeight * left + right
