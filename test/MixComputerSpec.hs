@@ -14,7 +14,7 @@ spec = do
   describe "instruction readers" $ do
     it "can get an unindexed address" $ do
       let w = (MIX.Pos, 1, 1, 0, 0, 0)
-          expectedResult = MIX.byteSize * 1 + 1
+          expectedResult = MIX.byteSize + 1
       MIX.address w `shouldBe` expectedResult
 
   describe "index reg getter" $ do
