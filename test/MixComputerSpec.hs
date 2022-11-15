@@ -22,3 +22,12 @@ spec = do
       -- TODO: should probably distinguish all the registers
       -- during the test setup so we make sure we get the right one.
       S.evalState (MIX.idxReg 1) MIX.initComputer `shouldBe` MIX.initIndexReg
+
+  describe "field specification helpers" $ do
+    it "can encode as a number" $ do
+      let fieldSpec = (3, 5)
+      MIX.encodeFieldSpec fieldSpec `shouldBe` 29
+
+    it "can decode from a number" $ do
+      let encodedFieldSpec = 29
+      MIX.decodeFieldSpec encodedFieldSpec `shouldBe` (3, 5)

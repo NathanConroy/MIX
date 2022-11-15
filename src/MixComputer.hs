@@ -19,6 +19,7 @@ data Sign = Pos | Neg
 type Word' = (Sign, Byte, Byte, Byte, Byte, Byte)
 type Index = (Sign, Byte, Byte)
 type Jump = (Byte, Byte)
+type FieldSpec = (Int, Int)
 
 -- Knuth refers to these with the little 'r' in front: (rA, rX, etc ...)
 -- However, Haskell wants types to begin with caps.
@@ -111,6 +112,22 @@ initComputer = MixComputer
   , overflowToggle = initOverflow
   , compIndicator = initCompIndicator
   }
+
+---------------------
+-- Auxiliary Funcs --
+---------------------
+
+-- A field spec (L:R) is encoded in a Word' as 8L + R
+fieldSpecLeftWeight = 8
+
+decodeFieldSpec :: Byte -> FieldSpec
+decodeFieldSpec byte = (left, right)
+  where left = byte `div` fieldSpecLeftWeight
+        right = byte `mod` fieldSpecLeftWeight
+        
+
+encodeFieldSpec :: FieldSpec -> Byte
+encodeFieldSpec (left, right) = fieldSpecLeftWeight * left + right
 
 --------------------
 -- MIX Operations --
