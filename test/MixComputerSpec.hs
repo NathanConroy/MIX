@@ -9,7 +9,7 @@ spec :: Spec
 spec = do
   describe "memory accessors" $ do
     it "can get an initial memory location" $ do
-      S.evalState (MIX.contents 0) MIX.initComputer `shouldBe` Just MIX.initMemoryCell
+      S.evalState (MIX.memContents 0) MIX.initComputer `shouldBe` Just MIX.initMemoryCell
 
   describe "instruction readers" $ do
     it "can get an unindexed address" $ do

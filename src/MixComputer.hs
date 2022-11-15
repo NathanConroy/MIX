@@ -150,7 +150,7 @@ address :: Word' -> MemLoc
 address (sign, a1, a2, _, _, _) = s * (a1 * byteSize + a2)
   where s = if sign == Pos then 1 else -1
 
-contents :: MemLoc -> S.State MixComputer (Maybe MemCell)
-contents loc = do
+memContents :: MemLoc -> S.State MixComputer (Maybe MemCell)
+memContents loc = do
   computer <- S.get
   return $ (memory computer) !!? loc
