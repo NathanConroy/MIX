@@ -15,11 +15,14 @@ testIndex = (MIX.Pos, 2, 19)
 execInitComp :: MIX.StMixComputer a -> MIX.MixComputer
 execInitComp = flip S.execState MIX.initComputer
 
+evalInitComp :: MIX.StMixComputer a -> a
+evalInitComp = flip S.evalState MIX.initComputer
+
 spec :: Spec
 spec = do
   describe "memory accessors" $ do
     it "can get an initial memory location" $ do
-      S.evalState (MIX.memContents 0) MIX.initComputer `shouldBe` Just MIX.initMemoryCell
+      evalInitComp (MIX.memContents 0) `shouldBe` Just MIX.initMemoryCell
 
   describe "instruction readers" $ do
     it "can calculate an unindexed address" $ do
@@ -31,7 +34,7 @@ spec = do
     it "can get the proper index" $ do
       -- TODO: should probably distinguish all the registers
       -- during the test setup so we make sure we get the right one.
-      S.evalState (MIX.idxReg 1) MIX.initComputer `shouldBe` MIX.initIndexReg
+      evalInitComp (MIX.idxReg 1) `shouldBe` MIX.initIndexReg
 
   describe "field specification helpers" $ do
     it "can encode as a number" $ do
