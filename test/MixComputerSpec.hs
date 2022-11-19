@@ -5,7 +5,11 @@ import Control.Monad.State.Lazy as S
 
 import qualified MixComputer as MIX
 
+testWord :: MIX.Word'
 testWord = (MIX.Neg, 3, 21, 9, 0, 22)
+
+testIndex :: MIX.Index
+testIndex = (MIX.Pos, 2, 19)
 
 -- Exec a stateful computation on a blank computer.
 execInitComp :: State MIX.MixComputer a -> MIX.MixComputer
@@ -18,7 +22,7 @@ spec = do
       S.evalState (MIX.memContents 0) MIX.initComputer `shouldBe` Just MIX.initMemoryCell
 
   describe "instruction readers" $ do
-    it "can get an unindexed address" $ do
+    it "can calculate an unindexed address" $ do
       let w = (MIX.Pos, 1, 1, 0, 0, 0)
           expectedResult = MIX.byteSize + 1
       MIX.address w `shouldBe` expectedResult
@@ -46,3 +50,7 @@ spec = do
     it "can update rX" $ do
       let comp = execInitComp (MIX.updateX testWord)
       MIX.rX (MIX.registers comp) `shouldBe` testWord
+
+    it "can update rI1" $ do
+      let comp = execInitComp (MIX.updateI1 testIndex)
+      MIX.rI1 (MIX.registers comp) `shouldBe` testIndex

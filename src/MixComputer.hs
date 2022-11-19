@@ -190,3 +190,10 @@ updateX w = do
   let regs = registers comp
       newRegs = regs { rX = w }
   S.put comp { registers = newRegs }
+
+updateI1 :: Index -> S.State MixComputer ()
+updateI1 idx = do
+  comp <- S.get
+  let regs = registers comp
+      newRegs = regs { rI1 = idx }
+  S.put comp { registers = newRegs }
