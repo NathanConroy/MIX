@@ -177,18 +177,16 @@ memContents loc = do
 
 -- TODO: Use lens library here
 -- TODO: Use Template Haskell for similar funcs
-updateA :: Word' -> S.State MixComputer Ar
+updateA :: Word' -> S.State MixComputer ()
 updateA w = do
   comp <- S.get
   let regs = registers comp
       newRegs = regs { rA = w }
   S.put comp { registers = newRegs }
-  pure $ rA newRegs
 
-updateX :: Word' -> S.State MixComputer Ar
+updateX :: Word' -> S.State MixComputer ()
 updateX w = do
   comp <- S.get
   let regs = registers comp
       newRegs = regs { rX = w }
   S.put comp { registers = newRegs }
-  pure $ rX newRegs
