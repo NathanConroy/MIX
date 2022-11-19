@@ -36,6 +36,11 @@ spec = do
 
   describe "test helpers" $ do
     it "can update rA" $ do
-      let (a, s) = S.runState (MIX.updateA testWord) MIX.initComputer
+      let (a, comp) = S.runState (MIX.updateA testWord) MIX.initComputer
       a `shouldBe` testWord
-      MIX.rA (MIX.registers s) `shouldBe` testWord
+      MIX.rA (MIX.registers comp) `shouldBe` testWord
+
+    it "can update rX" $ do
+      let (x, comp) = S.runState (MIX.updateX testWord) MIX.initComputer
+      x `shouldBe` testWord
+      MIX.rX (MIX.registers comp) `shouldBe` testWord
