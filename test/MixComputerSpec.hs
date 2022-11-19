@@ -5,6 +5,8 @@ import Control.Monad.State.Lazy as S
 
 import qualified MixComputer as MIX
 
+testWord = (MIX.Neg, 3, 21, 9, 0, 22)
+
 spec :: Spec
 spec = do
   describe "memory accessors" $ do
@@ -31,3 +33,9 @@ spec = do
     it "can decode from a number" $ do
       let encodedFieldSpec = 29
       MIX.decodeFieldSpec encodedFieldSpec `shouldBe` (3, 5)
+
+  describe "test helpers" $ do
+    it "can update rA" $ do
+      let (a, s) = S.runState (MIX.updateA testWord) MIX.initComputer
+      a `shouldBe` testWord
+      MIX.rA (MIX.registers s) `shouldBe` testWord

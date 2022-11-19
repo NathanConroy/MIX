@@ -128,9 +128,9 @@ initComputer = MixComputer
   , compIndicator = initCompIndicator
   }
 
----------------------
--- Auxiliary Funcs --
----------------------
+-------------------------------
+-- Instruction Reading Funcs --
+-------------------------------
 
 fieldSpecLeftWeight :: Int
 fieldSpecLeftWeight = 8
@@ -168,3 +168,18 @@ memContents :: MemLoc -> S.State MixComputer (Maybe MemCell)
 memContents loc = do
   computer <- S.get
   return $ (memory computer) !!? loc
+
+-------------------------------
+-- Test Helpers              --
+-------------------------------
+-- This functions allow us to update the computer's state
+-- directly - and not through MIX instructions.
+
+-- TODO: Use lens library here
+updateA :: Word' -> S.State MixComputer Ar
+updateA w = do
+  comp <- S.get
+  let regs = registers comp
+      newRegs = regs { rA = w }
+  S.put comp { registers = newRegs }
+  pure w
