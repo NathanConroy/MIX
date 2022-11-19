@@ -7,6 +7,10 @@ import qualified MixComputer as MIX
 
 testWord = (MIX.Neg, 3, 21, 9, 0, 22)
 
+-- Exec a stateful computation on a blank computer.
+execInitComp :: State MIX.MixComputer a -> MIX.MixComputer
+execInitComp = flip S.execState MIX.initComputer
+
 spec :: Spec
 spec = do
   describe "memory accessors" $ do
@@ -36,9 +40,9 @@ spec = do
 
   describe "test helpers" $ do
     it "can update rA" $ do
-      let comp = S.execState (MIX.updateA testWord) MIX.initComputer
+      let comp = execInitComp (MIX.updateA testWord)
       MIX.rA (MIX.registers comp) `shouldBe` testWord
 
     it "can update rX" $ do
-      let comp = S.execState (MIX.updateX testWord) MIX.initComputer
+      let comp = execInitComp (MIX.updateX testWord)
       MIX.rX (MIX.registers comp) `shouldBe` testWord
