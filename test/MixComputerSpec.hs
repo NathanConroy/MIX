@@ -12,7 +12,7 @@ testIndex :: MIX.Index
 testIndex = (MIX.Pos, 2, 19)
 
 -- Exec a stateful computation on a blank computer.
-execInitComp :: State MIX.MixComputer a -> MIX.MixComputer
+execInitComp :: MIX.StMixComputer a -> MIX.MixComputer
 execInitComp = flip S.execState MIX.initComputer
 
 spec :: Spec

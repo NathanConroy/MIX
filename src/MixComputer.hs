@@ -76,6 +76,9 @@ data MixComputer = MixComputer
   , compIndicator :: ComparisonIndicator
   }
 
+-- TODO - Is this idomatic?
+type StMixComputer = S.State MixComputer
+
 -- TODO input-output devices (Magnetic Tapes, Drums, etc.)
 
 -- TODO - Check if Knuth defines intial values for these things
@@ -147,7 +150,7 @@ encodeFieldSpec (left, right) = fieldSpecLeftWeight * left + right
 -- MIX Operations --
 --------------------
 
-idxReg :: Byte -> S.State MixComputer Index
+idxReg :: Byte -> StMixComputer Index
 idxReg i = do
   comp <- S.get
   let regs = registers comp
@@ -164,7 +167,7 @@ address :: Word' -> MemLoc
 address (sign, a1, a2, _, _, _) = s * (a1 * byteSize + a2)
   where s = if sign == Pos then 1 else -1
 
-memContents :: MemLoc -> S.State MixComputer (Maybe MemCell)
+memContents :: MemLoc -> StMixComputer (Maybe MemCell)
 memContents loc = do
   computer <- S.get
   return $ (memory computer) !!? loc
@@ -173,25 +176,25 @@ memContents loc = do
 -- Test Helpers              --
 -------------------------------
 -- This functions allow us to update the computer's state
--- directly - and not through MIX instructions.
+-- directly - not through MIX instructions.
 
 -- TODO: Use lens library here
 -- TODO: Use Template Haskell for similar funcs
-updateA :: Word' -> S.State MixComputer ()
+updateA :: Word' -> StMixComputer ()
 updateA w = do
   comp <- S.get
   let regs = registers comp
       newRegs = regs { rA = w }
   S.put comp { registers = newRegs }
 
-updateX :: Word' -> S.State MixComputer ()
+updateX :: Word' -> StMixComputer ()
 updateX w = do
   comp <- S.get
   let regs = registers comp
       newRegs = regs { rX = w }
   S.put comp { registers = newRegs }
 
-updateI1 :: Index -> S.State MixComputer ()
+updateI1 :: Index -> StMixComputer ()
 updateI1 idx = do
   comp <- S.get
   let regs = registers comp
