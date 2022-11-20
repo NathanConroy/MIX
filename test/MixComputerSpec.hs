@@ -34,7 +34,7 @@ spec = do
     it "can get the proper index" $ do
       -- TODO: should probably distinguish all the registers
       -- during the test setup so we make sure we get the right one.
-      evalInitComp (MIX.idxReg 1) `shouldBe` MIX.initIndexReg
+      evalInitComp (MIX.idxReg 1) `shouldBe` Just MIX.initIndexReg
 
   describe "field specification helpers" $ do
     it "can encode as a number" $ do

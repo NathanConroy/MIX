@@ -150,22 +150,29 @@ encodeFieldSpec (left, right) = fieldSpecLeftWeight * left + right
 -- MIX Operations --
 --------------------
 
-idxReg :: Byte -> StMixComputer Index
+idxReg :: Byte -> StMixComputer (Maybe Index)
 idxReg i = do
   comp <- S.get
   let regs = registers comp
   case i of
-    1 -> return $ rI1 regs
-    2 -> return $ rI2 regs
-    3 -> return $ rI3 regs
-    4 -> return $ rI4 regs
-    5 -> return $ rI5 regs
-    6 -> return $ rI6 regs
+    1 -> pure $ Just $ rI1 regs
+    2 -> pure $ Just $ rI2 regs
+    3 -> pure $ Just $ rI3 regs
+    4 -> pure $ Just $ rI4 regs
+    5 -> pure $ Just $ rI5 regs
+    6 -> pure $ Just $ rI6 regs
+    _ -> pure $ Nothing
 
 -- TODO: Factor in index specification
 address :: Word' -> MemLoc
 address (sign, a1, a2, _, _, _) = s * (a1 * byteSize + a2)
   where s = if sign == Pos then 1 else -1
+
+-- WIP -- got to first cover all cases in idxReg func
+-- indexedAddress :: Word' -> StMixComputer ()
+-- indexedAddress w@(sign, a1, a2, i, _, _) = do
+--   let addr = address w
+--   idxReg <- idxReg i
 
 memContents :: MemLoc -> StMixComputer (Maybe MemCell)
 memContents loc = do
